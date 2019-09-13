@@ -8,34 +8,72 @@
 $ npm i truffle-plugin-dist -D
 ```
 
-## Setup
+## Configuration
 Activate plugin in `truffle.js`
-```
+```js
+module.exports = {
+
+// ...
+
   plugins: [
     'truffle-plugin-dist',
   ],
+}
 ```
 Add `main` and `types` in `package.json`
-```
+```json
+{
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts"
+}
 ```
 
-## Configuration
 Define `dist` schema in `truffle.js`
-```
+```js
+module.exports = {
+
+// ...
+
   dist: {
-    'Example': { 
+    Example: { 
       abi: true,
       addresses: true,
       byteCodeHash: true,
     },
   },
+};
+```
+
+## Create distribution
+```bash
+$ truffle run dist
 ```
 
 ## Usage
-```bash
-$ truffle run dist
+```js
+import { 
+  ContractNames, 
+  getContractAddress, 
+  getContractAbi, 
+  getContractByteCodeHash, 
+} from 'your-contracts-npm-package'; 
+
+console.log(
+  'Example contract mainnet address:', 
+  getContractAddress(ContractNames.Example, '1'),
+);
+console.log(
+  'Example contract kovan address:', 
+  getContractAddress(ContractNames.Example, '42'),
+);
+console.log(
+  'Example contract abi:', 
+  getContractAbi(ContractNames.Example),
+);
+console.log(
+  'Example contract byteCodeHash:',
+  getContractByteCodeHash(ContractNames.Example),
+);
 ```
 
 ## License
