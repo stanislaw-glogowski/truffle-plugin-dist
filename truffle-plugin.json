@@ -1,0 +1,5 @@
+{
+  "commands": {
+    "dist": "./lib/plugin.js"
+  }
+}
