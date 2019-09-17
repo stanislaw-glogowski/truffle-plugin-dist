@@ -9,24 +9,53 @@ const DIST_DIR = 'dist';
 function getContracts(schema, buildPath) {
   return Object.keys(schema || {})
     .map((name) => {
-      const path = join(buildPath, `${name}.json`);
+      let result = null;
+      let options = schema[name];
 
-      let build = {};
-      try {
-        build = require(path);
-      } catch (err) {
-        build = {};
+      if (options && typeof options === 'object') {
+        options = {
+          abi: false,
+          addresses: false,
+          byteCodeHash: false,
+          ...options,
+        };
+      } else if (!!options) {
+        options = {
+          abi: true,
+          addresses: true,
+          byteCodeHash: true,
+        };
+      } else {
+        options = null;
       }
-      return {
-        name,
-        build: {
-          abi: null,
-          bytecode: null,
-          networks: {},
-          ...build,
-        },
-      };
-    });
+
+      if (options) {
+        const path = join(buildPath, `${options.contract || name}.json`);
+
+        let build = null;
+        try {
+          build = require(path);
+        } catch (err) {
+          build = null;
+        }
+
+        if (build) {
+          result = {
+            name,
+            options,
+            build: {
+              abi: null,
+              bytecode: null,
+              networks: {},
+              ...build,
+            },
+          };
+        }
+      }
+
+      return result;
+    })
+    .filter(value => !!value);
 }
 
 function getNetworkIds(networks) {
@@ -76,8 +105,7 @@ module.exports = async (config) => {
   const data = {};
   const oldData = getData(distPath);
 
-  for (const { name, build } of contracts) {
-    const options = schema[name];
+  for (const { name, options, build } of contracts) {
     const oldItem = {
       abi: null,
       addresses: {},
