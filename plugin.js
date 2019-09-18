@@ -17,12 +17,14 @@ function getContracts(schema, buildPath) {
           abi: false,
           addresses: false,
           byteCodeHash: false,
+          knownAddresses: {},
           ...options,
         };
       } else if (!!options) {
         options = {
           abi: true,
           addresses: true,
+          knownAddresses: {},
           byteCodeHash: true,
         };
       } else {
@@ -130,10 +132,20 @@ module.exports = async (config) => {
     }
 
     if (options.addresses) {
+      const knownAddresses = options.knownAddresses && typeof options.knownAddresses === 'object'
+        ? options.knownAddresses
+        : {};
+
       for (const networkId of networkIds) {
-        newItem.addresses[networkId] = build.networks[networkId]
-          ? build.networks[networkId].address
-          : oldItem.addresses[networkId] || null;
+        let address = oldItem.addresses[networkId];
+
+        if (knownAddresses[networkId]) {
+          address = knownAddresses[networkId];
+        } else if (build.networks[networkId]) {
+          ({ address } = build.networks[networkId]);
+        }
+
+        newItem.addresses[networkId] = address || null;
       }
     }
 
