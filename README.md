@@ -28,13 +28,13 @@ Add `main` and `types` in `package.json`
 }
 ```
 
-Define `dist` schema in `truffle.js`
+Define `schema` schema in `truffle.js`
 ```js
 module.exports = {
 
 // ...
 
-  dist: {
+  schema: {
     Example: { 
       abi: true,
       addresses: true,
@@ -54,7 +54,7 @@ $ truffle run dist
 import { 
   ContractNames, 
   getContractAddress, 
-  getContractAbi, 
+  getContractAbiDefinition, 
   getContractByteCodeHash, 
 } from 'your-contracts-npm-package'; 
 
@@ -67,8 +67,8 @@ console.log(
   getContractAddress(ContractNames.Example, '42'),
 );
 console.log(
-  'Example contract abi:', 
-  getContractAbi(ContractNames.Example),
+  'Example contract abi definition:', 
+  getContractAbiDefinition(ContractNames.Example),
 );
 console.log(
   'Example contract byteCodeHash:',

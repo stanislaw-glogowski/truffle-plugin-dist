@@ -17,17 +17,17 @@ ${contracts
   .join('\n')}
 };
 
-function getContractAddress(contractName, network) {
+function getContractAddress(contractName, networkId = 1) {
   let result;
 
   if (data[contractName]) {
-    result = data[contractName].addresses[network];
+    result = data[contractName].addresses[\`$\{networkId\}\`];
   }
 
   return result || null;
 }
 
-function getContractAbi(contractName) {
+function getContractAbiDefinition(contractName) {
   let result;
 
   if (data[contractName]) {
@@ -50,7 +50,7 @@ function getContractByteCodeHash(contractName) {
 module.exports = {
   ContractNames,
   getContractAddress,
-  getContractAbi,
+  getContractAbiDefinition,
   getContractByteCodeHash,
 };
 `;
@@ -66,9 +66,9 @@ ${contracts
   .join('\n')}
 }
 
-export declare function getContractAddress(contractName: ContractNames, network: string): string;
+export declare function getContractAddress(contractName: ContractNames, networkId?: string | number): string;
 
-export declare function getContractAbi(contractName: ContractNames): any;
+export declare function getContractAbiDefinition(contractName: ContractNames): any;
 
 export declare function getContractByteCodeHash(contractName: ContractNames): string;
 `;

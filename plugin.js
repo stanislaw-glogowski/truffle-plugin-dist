@@ -89,7 +89,7 @@ module.exports = async (config) => {
     help,
     networks,
     logger,
-    dist: schema,
+    schema,
     working_directory: workingPath,
     contracts_build_directory: buildPath,
     _,
